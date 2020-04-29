@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>关于 | 浮生•默客</title>
+<title>Redis 报错总结 | 浮生•默客</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -24,15 +24,14 @@
 
 
 
-    <meta name="description" content="
-欢迎来到我的小站呀，很高兴遇见你！🤝
+    <meta name="description" content="报错1：
 
-🏠 关于本站
-👨‍💻 博主是谁
-⛹ 兴趣爱好
-📬 联系我呀
-..." />
-    <meta name="keywords" content="" />
+Redis之MISCONF Redis is configured to save RDB snapshots, but is currently not able to persist o...
+
+原因：
+
+强制关闭Redis..." />
+    <meta name="keywords" content="Linux" />
   </head>
   <body>
     <div id="app" class="main">
@@ -103,19 +102,58 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">关于</h2>
-            <div class="post-date">2019-01-25</div>
+            <h2 class="post-title">Redis 报错总结</h2>
+            <div class="post-date">2016-02-10</div>
+            
+              <div class="feature-container" style="background-image: url('https://berny-chen.github.io/post-images/redis-errors.jpg')">
+              </div>
             
             <div class="post-content" v-pre>
-              <blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
+              <h3 id="报错1">报错1：</h3>
+<blockquote>
+<p>Redis之MISCONF Redis is configured to save RDB snapshots, but is currently not able to persist o...</p>
 </blockquote>
-<h2 id="关于本站">🏠 关于本站</h2>
-<h2 id="博主是谁">👨‍💻 博主是谁</h2>
-<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
-<h2 id="联系我呀">📬 联系我呀</h2>
+<h5 id="原因">原因：</h5>
+<blockquote>
+<p>强制关闭Redis快照导致不能持久化。</p>
+</blockquote>
+<h5 id="解决">解决：</h5>
+<blockquote>
+<p>将 stop-writes-on-bgsave-error 设置为 no<br>
+127.0.0.1:6379&gt; config set stop-writes-on-bgsave-error no</p>
+</blockquote>
+<h3 id="报错2">报错2：</h3>
+<blockquote>
+<p>redis保存失败（save (error) ERR）+redis关闭失败：Failed opening the RDB file dump.rdb XXX for saving: Permissio</p>
+</blockquote>
+<h5 id="错误现象">错误现象：</h5>
+<blockquote>
+<p>在redis客户端中进行保存操作，显示失败：<br>
+127.0.0.1:6379&gt; save<br>
+(error) ERR</p>
+</blockquote>
+<h5 id="原因-2">原因：</h5>
+<blockquote>
+<p>权限不足，指定dump.dump.rdb</p>
+</blockquote>
+<h5 id="解决-2">解决：</h5>
+<blockquote>
+<p>redis.conf   dir /usr/local/redis<br>
+chmod 757  /usr/local/redis<br>
+重启 redis</p>
+</blockquote>
+<h5 id="注意">注意：</h5>
+<p>redis 高版本的dump.rdb 无法在比其低的redis 版本中使用</p>
 
             </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://berny-chen.github.io/tag/Linux/" class="tag">
+                    Linux
+                  </a>
+                
+              </div>
             
             
 

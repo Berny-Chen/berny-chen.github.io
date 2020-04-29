@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>文章归档 | 浮生•默客</title>
+<title>Redis 报错总结 | 浮生•默客</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -12,13 +12,26 @@
 <link rel="stylesheet" href="https://berny-chen.github.io/styles/main.css">
 
 
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
 
 <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
 
 
-    <meta name="description" content="&lt;b&gt;行者常至，为者常成。&lt;/b&gt;">
+    <meta name="description" content="报错1：
+
+Redis之MISCONF Redis is configured to save RDB snapshots, but is currently not able to persist o...
+
+原因：
+
+强制关闭Redis..." />
+    <meta name="keywords" content="" />
   </head>
   <body>
     <div id="app" class="main">
@@ -88,30 +101,60 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          
+          <div class="post-detail">
+            <h2 class="post-title">Redis 报错总结</h2>
+            <div class="post-date">2020-04-29</div>
+            
+            <div class="post-content" v-pre>
+              <h5 id="报错1">报错1：</h5>
+<blockquote>
+<p>Redis之MISCONF Redis is configured to save RDB snapshots, but is currently not able to persist o...</p>
+</blockquote>
+<h5 id="原因">原因：</h5>
+<blockquote>
+<p>强制关闭Redis快照导致不能持久化。</p>
+</blockquote>
+<h5 id="解决">解决：</h5>
+<blockquote>
+<p>将 stop-writes-on-bgsave-error 设置为 no<br>
+127.0.0.1:6379&gt; config set stop-writes-on-bgsave-error no</p>
+</blockquote>
+<h5 id="报错2">报错2：</h5>
+<blockquote>
+<p>redis保存失败（save (error) ERR）+redis关闭失败：Failed opening the RDB file dump.rdb XXX for saving: Permissio</p>
+</blockquote>
+<h5 id="错误现象">错误现象：</h5>
+<blockquote>
+<p>在redis客户端中进行保存操作，显示失败：<br>
+127.0.0.1:6379&gt; save<br>
+(error) ERR</p>
+</blockquote>
+<h5 id="原因-2">原因：</h5>
+<blockquote>
+<p>权限不足，指定dump.dump.rdb</p>
+</blockquote>
+<h5 id="解决-2">解决：</h5>
+<blockquote>
+<p>redis.conf   dir /usr/local/redis<br>
+chmod 757  /usr/local/redis<br>
+重启 redis</p>
+</blockquote>
+<h5 id="注意">注意：</h5>
+<p>redis 高版本的dump.rdb 无法在比其低的redis 版本中使用</p>
 
-          <h2 class="archives-title">文章归档</h2>
-          <div class="archives-container">
+            </div>
             
-              <h2 class="year" data-aos="fade-in" data-aos-delay="500">2020</h2>
+            
+
+            
               
-                
-                  <article class="post">
-                    <a href="https://berny-chen.github.io/post/redis-bao-cuo-zong-jie/">
-                      <h2 class="post-title">
-                        Redis 报错总结
-                      </h2>
-                    </a>
-                  </article>
-                
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
               
             
+
           </div>
-
-          <div class="pagination-container">
-  
-  
-</div>
 
         </div>
       </div>
@@ -132,6 +175,29 @@ var app = new Vue({
 </script>
 
 
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '3716a3a4139d9ae36956',
+        clientSecret: '9abd5e24ac828e6d766cdef39eb2b41241b0a851',
+        repo: 'berny-chen.github.io',
+        owner: 'berny-chen',
+        admin: ['berny-chen'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
 
 
 

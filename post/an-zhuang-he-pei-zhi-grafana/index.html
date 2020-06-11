@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>安装和配置Grafana | 浮生•默客</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://berny-chen.github.io/favicon.ico?v=1591854611673">
+<link rel="stylesheet" href="https://berny-chen.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="一. Grafana：
+官网：https://grafana.com/
+Grafana 是一个开源的时序性统计和监控平台，支持例如 elasticsearch、graphite、influxdb 等众多的数据源，并以功能强大的界面编辑器著称..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://berny-chen.github.io">
+        <img src="https://berny-chen.github.io/images/avatar.png?v=1591854611673" class="site-logo">
+        <h1 class="site-title">浮生•默客</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      <b>行者常至，为者常成。</b>
+    </div>
+    <div class="site-footer">
+       | <a class="rss" href="https://berny-chen.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">安装和配置Grafana</h2>
+            <div class="post-date">2020-06-11</div>
+            
+            <div class="post-content" v-pre>
+              <h3 id="一-grafana">一. Grafana：</h3>
+<p>官网：https://grafana.com/<br>
+Grafana 是一个开源的时序性统计和监控平台，支持例如 elasticsearch、graphite、influxdb 等众多的数据源，并以功能强大的界面编辑器著称。</p>
+<h5 id="安装node和grafana">安装Node和Grafana:</h5>
+<pre><code>wget -c https://nodejs.org/dist/latest-v13.x/node-v13.14.0-linux-x64.tar.gz
+wget https://dl.grafana.com/oss/release/grafana-7.0.3.linux-amd64.tar.gz
+tar xvfz node-v13.14.0-linux-x64.tar.gz -C  /usr/local/node
+tar xvfz grafana-7.0.3.linux-amd64.tar.gz  -C  /usr/local/grafana
+</code></pre>
+<h5 id="grafana-配置">grafana 配置：</h5>
+<pre><code>cp /usr/local/grafana/conf/defaults.ini  /usr/local/grafana/conf/grafana.ini 
+</code></pre>
+<h5 id="添加用户">添加用户：</h5>
+<blockquote>
+<p>useradd -rs /bin/false grafana</p>
+</blockquote>
+<h5 id="配置执行目录及权限">配置执行目录及权限：</h5>
+<blockquote>
+<p>chown -R grafana:grafana /usr/local/grafana</p>
+</blockquote>
+<h5 id="grafana-serverservice-配置启动项">grafana-server.service 配置启动项：</h5>
+<pre><code>vi /etc/systemd/system/grafana-server.service
+[Unit]
+Description=Grafana Server
+After=network.target
+
+[Service]
+User=grafana
+Group=grafana
+Type=notify
+ExecStart=/usr/local/grafana/bin/grafana-server -homepath /usr/local/grafana -config /usr/local/grafana/conf/grafana.ini
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<h5 id="执行reload命令属性服务配置">执行reload命令属性服务配置:</h5>
+<pre><code>systemctl daemon-reload
+systemctl enable grafana-server 
+systemctl start grafana-server
+</code></pre>
+<h5 id="grafana插件grafana-cli">Grafana插件：Grafana-cli</h5>
+<pre><code>grafana-cli plugins list-remote         # 列出可用的插件
+grafana-cli plugins install &lt;plugin-id&gt;         # 安装最新版本的插件
+grafana-cli plugins install &lt;plugin-id&gt; &lt;version&gt;           # 安装特定版本的插件
+grafana-cli plugins ls          # 列出已安装的插件
+grafana-cli plugins update-all          #更新所有已安装的插件
+grafana-cli plugins update &lt;plugin-id&gt;          # 更新一个插件
+grafana-cli plugins remove &lt;plugin-id&gt;          # 删除一个插件
+grafana-cli admin reset-admin-password --homepath &quot;/usr/local/grafana&quot; newpass       # 使用CLI重置admin用户的密码
+</code></pre>
+<h5 id="dashboards仪表板">Dashboards(仪表板)：</h5>
+<p>通过在/usr/local/grafana/conf/provisioning/dashboards目录中添加一个或多个yaml配置文件，可以在Grafana中管理仪表板。<br>
+每个配置文件都可以包含一个仪表板提供程序列表，它将从本地文件系统将仪表板加载到Grafana中。</p>
+<pre><code>apiVersion: 1providers:- name: 'default'
+    orgId: 1
+    folder: ''
+    type: file  disableDeletion: false
+    updateIntervalSeconds: 10 
+    options:
+         path: /usr/local/grafana/dashboard
+</code></pre>
+<pre><code> 当Grafana启动时，它将update/insert配置路径中可用的所有仪表板。 然后稍后轮询该路径并查找更新的json文件并将这些update/insert到数据库中。
+</code></pre>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://berny-chen.github.io/post/redis-errors/">
+                  <h3 class="post-title">
+                    Redis 报错总结
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '3716a3a4139d9ae36956',
+        clientSecret: '9abd5e24ac828e6d766cdef39eb2b41241b0a851',
+        repo: 'berny-chen.github.io',
+        owner: 'berny-chen',
+        admin: ['berny-chen'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

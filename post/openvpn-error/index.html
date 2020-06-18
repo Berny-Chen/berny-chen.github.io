@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://berny-chen.github.io/favicon.ico?v=1592461422344">
+<link rel="shortcut icon" href="https://berny-chen.github.io/favicon.ico?v=1592461731230">
 <link rel="stylesheet" href="https://berny-chen.github.io/styles/main.css">
 
 
@@ -42,7 +42,7 @@ Job..." />
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://berny-chen.github.io">
-        <img src="https://berny-chen.github.io/images/avatar.png?v=1592461422344" class="site-logo">
+        <img src="https://berny-chen.github.io/images/avatar.png?v=1592461731230" class="site-logo">
         <h1 class="site-title">浮生•默客</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -123,12 +123,12 @@ Job for openvpn@server.service failed because the control process exited with er
 [root@iZbp1e8932c78ic87r3s4wZ server]# systemctl status openvpn@server.service
 ● openvpn@server.service - OpenVPN Robust And Highly Flexible Tunneling Application On server
    Loaded: loaded (/usr/lib/systemd/system/openvpn@.service; enabled; vendor preset: disabled)
-   Active: failed (Result: exit-code) since Mon 2020-06-08 23:17:19 CST; 8s ago
+   Active: failed (Result: exit-code) since Mon 2019-08-07 23:17:19 CST; 8s ago
   Process: 62584 ExecStart=/usr/sbin/openvpn --cd /etc/openvpn/ --config %i.conf (code=exited, status=1/FAILURE)
  Main PID: 62584 (code=exited, status=1/FAILURE)
 
-Jun 08 23:17:19 iZbp1e8932c78ic87r3s4wZ systemd[1]: Failed to start OpenVPN Robust And Highly Flexible Tunneling Application On server.
-Jun 08 23:17:19 iZbp1e8932c78ic87r3s4wZ systemd[1]: openvpn@server.service failed
+Oct 07 23:17:19 iZbp1e8932c78ic87r3s4wZ systemd[1]: Failed to start OpenVPN Robust And Highly Flexible Tunneling Application On server.
+Oct 07 23:17:19 iZbp1e8932c78ic87r3s4wZ systemd[1]: openvpn@server.service failed
 </code></pre>
 <p>报错解决：</p>
 <pre><code>修改openvpn@.service：

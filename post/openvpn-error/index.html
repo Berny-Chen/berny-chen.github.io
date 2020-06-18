@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>关于 | 浮生•默客</title>
+<title>centos 7 启动openvpn server 报错：OpenVPN Robust And Highly Flexible Tunneling Application On server | 浮生•默客</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -24,15 +24,16 @@
 
 
 
-    <meta name="description" content="
-欢迎来到我的小站呀，很高兴遇见你！🤝
+    <meta name="description" content="环境和版本：
 
-🏠 关于本站
-👨‍💻 博主是谁
-⛹ 兴趣爱好
-📬 联系我呀
-..." />
-    <meta name="keywords" content="" />
+系统环境：centos 7.6
+openvpn: openvpn-2.4.8-1.el7.x86_64
+
+报错详情：
+启动命令：systemctl start openvpn@server.service
+报错详情：
+Job..." />
+    <meta name="keywords" content="工具类" />
   </head>
   <body>
     <div id="app" class="main">
@@ -103,20 +104,72 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">关于</h2>
-            <div class="post-date">2019-01-25</div>
+            <h2 class="post-title">centos 7 启动openvpn server 报错：OpenVPN Robust And Highly Flexible Tunneling Application On server</h2>
+            <div class="post-date">2019-08-07</div>
+            
+              <div class="feature-container" style="background-image: url('https://berny-chen.github.io/post-images/openvpn-error.png')">
+              </div>
             
             <div class="post-content" v-pre>
-              <blockquote>
-<p>欢迎来到我的小站呀，很高兴遇见你！🤝</p>
+              <p>环境和版本：</p>
+<blockquote>
+<p>系统环境：centos 7.6<br>
+openvpn: openvpn-2.4.8-1.el7.x86_64</p>
 </blockquote>
-<h2 id="关于本站">🏠 关于本站</h2>
-<h2 id="博主是谁">👨‍💻 博主是谁</h2>
-<h2 id="兴趣爱好">⛹ 兴趣爱好</h2>
-<h2 id="联系我呀">📬 联系我呀</h2>
+<p>报错详情：</p>
+<pre><code>启动命令：systemctl start openvpn@server.service
+报错详情：
+Job for openvpn@server.service failed because the control process exited with error code. See &quot;systemctl status openvpn@server.service&quot; and &quot;journalctl -xe&quot; for details.
+[root@iZbp1e8932c78ic87r3s4wZ server]# systemctl status openvpn@server.service
+● openvpn@server.service - OpenVPN Robust And Highly Flexible Tunneling Application On server
+   Loaded: loaded (/usr/lib/systemd/system/openvpn@.service; enabled; vendor preset: disabled)
+   Active: failed (Result: exit-code) since Mon 2020-06-08 23:17:19 CST; 8s ago
+  Process: 62584 ExecStart=/usr/sbin/openvpn --cd /etc/openvpn/ --config %i.conf (code=exited, status=1/FAILURE)
+ Main PID: 62584 (code=exited, status=1/FAILURE)
+
+Jun 08 23:17:19 iZbp1e8932c78ic87r3s4wZ systemd[1]: Failed to start OpenVPN Robust And Highly Flexible Tunneling Application On server.
+Jun 08 23:17:19 iZbp1e8932c78ic87r3s4wZ systemd[1]: openvpn@server.service failed
+</code></pre>
+<p>报错解决：</p>
+<pre><code>修改openvpn@.service：
+vi /usr/lib/systemd/system/openvpn@.service
+[Unit]
+Description=OpenVPN Robust And Highly Flexible Tunneling Application On %I
+After=network.target
+
+[Service]
+Type=notify
+PrivateTmp=true
+ExecStart=/usr/sbin/openvpn --cd /etc/openvpn/server --config %i.conf
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<p>即在Service中增加：cd /etc/openvpn/server</p>
+<p>报错原因：</p>
+<blockquote>
+<p>这是因为将openvpn server 的配置文件放置到/etc/openvpn/server目录下引起的。</p>
+</blockquote>
 
             </div>
             
+              <div class="tag-container">
+                
+                  <a href="https://berny-chen.github.io/tag/cAjOBgKNE/" class="tag">
+                    工具类
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://berny-chen.github.io/post/redis-errors/">
+                  <h3 class="post-title">
+                    Redis 报错总结
+                  </h3>
+                </a>
+              </div>
             
 
             
